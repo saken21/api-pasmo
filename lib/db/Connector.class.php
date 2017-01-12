@@ -8,7 +8,10 @@ class db_Connector {
 		$hostName = $_SERVER['SERVER_NAME'];
 		db_Connector::$_connection = jp_saken_php_DB::getConnection("pasmo");
 	}
-	static function select($table, $columns = null, $params = null) {
+	static function select($table, $columns = null, $params = null, $option = null) {
+		if($option === null) {
+			$option = "";
+		}
 		if($columns === null) {
 			$columns = "id";
 		}
@@ -16,17 +19,17 @@ class db_Connector {
 		if($params !== null) {
 			$where = db_Utils::getJoined($params, null);
 		}
-		return db_Connector::selectFully($table, $columns, $where);
+		return db_Connector::selectFully($table, $columns, $where, $option);
 	}
-	static function selectFully($table, $columns, $where) {
+	static function selectFully($table, $columns, $where, $option) {
 		$tmp = strlen($where) > 0;
 		if($tmp) {
 			$where = " where " . _hx_string_or_null($where);
 		}
-		return db_Connector::request("select " . _hx_string_or_null($columns) . " from " . _hx_string_or_null($table) . _hx_string_or_null($where));
+		return db_Connector::request("select " . _hx_string_or_null($columns) . " from " . _hx_string_or_null($table) . _hx_string_or_null($where) . _hx_string_or_null($option));
 	}
 	static function update($table, $data, $params) {
-		$tmp = db_Connector::select($table, "id", $params);
+		$tmp = db_Connector::select($table, "id", $params, null);
 		$tmp1 = !db_Utils::exists($tmp);
 		if($tmp1) {
 			db_Connector::insert($table, $data);

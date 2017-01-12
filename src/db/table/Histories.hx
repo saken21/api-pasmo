@@ -13,7 +13,7 @@ class Histories {
 	========================================================================== */
 	public static function get(cardID:String,term:String):Dynamic {
 		
-		return Json.parse(select(FULL_COLUMNS,['card_id'=>cardID,'term'=>term]));
+		return Json.parse(select(FULL_COLUMNS,['card_id'=>cardID,'term'=>term],' order by history_date asc'));
 
 	}
 
@@ -45,9 +45,9 @@ class Histories {
 	/* =======================================================================
 	Select
 	========================================================================== */
-	private static function select(columns:String,params:Map<String,String> = null):String {
+	private static function select(columns:String,params:Map<String,String> = null,option:String = ''):String {
 		
-		return Connector.select(TABLE_NAME,columns,params);
+		return Connector.select(TABLE_NAME,columns,params,option);
 		
 	}
 

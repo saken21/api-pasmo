@@ -9,7 +9,7 @@ class db_table_Histories {
 		$_g = new haxe_ds_StringMap();
 		$_g->set("card_id", $cardID);
 		$_g->set("term", $term);
-		$text = db_table_Histories::select("id,card_id,term,history_date,client,transportation,departure,destination,is_round,price,comment,is_charge,last_modified_time", $_g);
+		$text = db_table_Histories::select("id,card_id,term,history_date,client,transportation,departure,destination,is_round,price,comment,is_charge,last_modified_time", $_g, " order by history_date asc");
 		return haxe_Json::phpJsonDecode($text);
 	}
 	static function set($id, $cardID, $term, $price, $params) {
@@ -21,7 +21,7 @@ class db_table_Histories {
 		if($id !== null) {
 			$_g = new haxe_ds_StringMap();
 			$_g->set("id", $id);
-			$tmp1 = db_table_Histories::select("id", $_g);
+			$tmp1 = db_table_Histories::select("id", $_g, null);
 			$tmp = db_Utils::exists($tmp1);
 		} else {
 			$tmp = false;
@@ -36,8 +36,11 @@ class db_table_Histories {
 		db_table_Histories::returnBalance($id);
 		db_Connector::delete("histories", $id);
 	}
-	static function select($columns, $params = null) {
-		return db_Connector::select("histories", $columns, $params);
+	static function select($columns, $params = null, $option = null) {
+		if($option === null) {
+			$option = "";
+		}
+		return db_Connector::select("histories", $columns, $params, $option);
 	}
 	static function update($id, $cardID, $term, $price, $params) {
 		db_table_Histories::returnBalance($id);
@@ -53,7 +56,7 @@ class db_table_Histories {
 	static function returnBalance($id) {
 		$_g = new haxe_ds_StringMap();
 		$_g->set("id", $id);
-		$text = db_table_Histories::select("card_id,term,price", $_g);
+		$text = db_table_Histories::select("card_id,term,price", $_g, null);
 		$tmp = haxe_Json::phpJsonDecode($text);
 		$last = $tmp[0];
 		$tmp1 = $last->card_id;

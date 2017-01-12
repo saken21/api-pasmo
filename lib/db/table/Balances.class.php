@@ -39,7 +39,7 @@ class db_table_Balances {
 		db_table_Balances::cutdown($cardID, $term, -$diff);
 	}
 	static function select($columns, $params = null) {
-		return db_Connector::select("balances", $columns, $params);
+		return db_Connector::select("balances", $columns, $params, null);
 	}
 	static function insert($cardID, $term, $value) {
 		$_g = new haxe_ds_StringMap();

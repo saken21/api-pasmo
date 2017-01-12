@@ -26,7 +26,7 @@ class Connector {
 		/* =======================================================================
 		Public - Select
 		========================================================================== */
-		public static function select(table:String,columns:String = 'id',params:Map<String,String> = null):String {
+		public static function select(table:String,columns:String = 'id',params:Map<String,String> = null,option:String = ''):String {
 
 			var where:String = '';
 
@@ -34,20 +34,20 @@ class Connector {
 				where = Utils.getJoined(params);
 			}
 
-			return selectFully(table,columns,where);
+			return selectFully(table,columns,where,option);
 
 		}
 		
 		/* =======================================================================
 		Public - Select Fully
 		========================================================================== */
-		public static function selectFully(table:String,columns:String,where:String):String {
+		public static function selectFully(table:String,columns:String,where:String,option:String):String {
 			
 			if (where.length > 0) {
 				where = ' where ' + where;
 			}
 			
-			return request('select ' + columns + ' from ' + table + where);
+			return request('select ' + columns + ' from ' + table + where + option);
 
 		}
 
