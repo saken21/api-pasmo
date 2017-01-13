@@ -11,11 +11,20 @@ class Histories {
 	/* =======================================================================
 	Public - Get
 	========================================================================== */
-	public static function get(cardID:String,term:String):Dynamic {
+	public static function get(id:String):Dynamic {
 		
-		return Json.parse(select(FULL_COLUMNS,['card_id'=>cardID,'term'=>term],' order by history_date asc'));
+		return Json.parse(select(FULL_COLUMNS,['id'=>id]))[0];
 
 	}
+
+		/* =======================================================================
+		Public - Get List
+		========================================================================== */
+		public static function getList(cardID:String,term:String):Dynamic {
+			
+			return Json.parse(select(FULL_COLUMNS,['card_id'=>cardID,'term'=>term],' order by history_date asc'));
+
+		}
 
 		/* =======================================================================
 		Public - Set

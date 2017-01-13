@@ -5,7 +5,14 @@ class db_table_Histories {
 	public function __construct(){}
 	static $TABLE_NAME = "histories";
 	static $FULL_COLUMNS = "id,card_id,term,history_date,client,transportation,departure,destination,is_round,price,comment,is_charge,last_modified_time";
-	static function get($cardID, $term) {
+	static function get($id) {
+		$_g = new haxe_ds_StringMap();
+		$_g->set("id", $id);
+		$text = db_table_Histories::select("id,card_id,term,history_date,client,transportation,departure,destination,is_round,price,comment,is_charge,last_modified_time", $_g, null);
+		$tmp = haxe_Json::phpJsonDecode($text);
+		return $tmp[0];
+	}
+	static function getList($cardID, $term) {
 		$_g = new haxe_ds_StringMap();
 		$_g->set("card_id", $cardID);
 		$_g->set("term", $term);

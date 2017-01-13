@@ -20,13 +20,15 @@ class DBManager {
 		_results = { status:0, message:ErrorMessage.NO_MODE, result:null };
 
 		var mode:String = params['mode'];
+		var id  :String = params['id'];
+
 		params.remove('mode');
 
 		switch(mode) {
 
-			case 'get'    : getList(params['card_id'],params['term']);
+			case 'get'    : id == null ? getList(params['card_id'],params['term']) : getHistory(id);
 			case 'set'    : setHistory(params);
-			case 'delete' : deleteHistory(params['id']);
+			case 'delete' : deleteHistory(id);
 			
 		}
 
@@ -56,10 +58,20 @@ class DBManager {
 		_results.result = {
 
 			balance   : Balances.get(cardID,term),
-			histories : Histories.get(cardID,term)
+			histories : Histories.getList(cardID,term)
 
 		};
 
+		setSuccess();
+
+	}
+
+	/* =======================================================================
+	Get History
+	========================================================================== */
+	private static function getHistory(id:String):Void {
+
+		_results.result = Histories.get(id);
 		setSuccess();
 
 	}

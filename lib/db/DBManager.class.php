@@ -9,14 +9,19 @@ class db_DBManager {
 		db_Connector::init();
 		db_DBManager::$_results = _hx_anonymous(array("status" => 0, "message" => "Error: No mode", "result" => null));
 		$mode = $params->get("mode");
+		$id = $params->get("id");
 		$params->remove("mode");
 		switch($mode) {
 		case "delete":{
-			db_DBManager::deleteHistory($params->get("id"));
+			db_DBManager::deleteHistory($id);
 		}break;
 		case "get":{
-			$tmp = $params->get("card_id");
-			db_DBManager::getList($tmp, $params->get("term"));
+			if($id === null) {
+				$tmp = $params->get("card_id");
+				db_DBManager::getList($tmp, $params->get("term"));
+			} else {
+				db_DBManager::getHistory($id);
+			}
 		}break;
 		case "set":{
 			db_DBManager::setHistory($params);
@@ -36,8 +41,12 @@ class db_DBManager {
 			return;
 		}
 		$tmp1 = db_table_Balances::get($cardID, $term);
-		$tmp2 = db_table_Histories::get($cardID, $term);
+		$tmp2 = db_table_Histories::getList($cardID, $term);
 		db_DBManager::$_results->result = _hx_anonymous(array("balance" => $tmp1, "histories" => $tmp2));
+		db_DBManager::setSuccess();
+	}
+	static function getHistory($id) {
+		db_DBManager::$_results->result = db_table_Histories::get($id);
 		db_DBManager::setSuccess();
 	}
 	static function setHistory($params) {
