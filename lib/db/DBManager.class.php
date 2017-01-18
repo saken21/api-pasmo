@@ -5,6 +5,7 @@ class db_DBManager {
 	public function __construct(){}
 	static function _results() { $args = func_get_args(); return call_user_func_array(self::$_results, $args); }
 	static $_results;
+	static $CSV_NAME = "pasmo.csv";
 	static function getResults($params) {
 		db_Connector::init();
 		db_DBManager::$_results = _hx_anonymous(array("status" => 0, "message" => "Error: No mode", "result" => null));
@@ -12,6 +13,9 @@ class db_DBManager {
 		$id = $params->get("id");
 		$params->remove("mode");
 		switch($mode) {
+		case "csv":{
+			db_DBManager::exportCsv($params->get("data"));
+		}break;
 		case "delete":{
 			db_DBManager::deleteHistory($id);
 		}break;
@@ -74,6 +78,13 @@ class db_DBManager {
 			return;
 		}
 		db_table_Histories::delete($id);
+		db_DBManager::setSuccess();
+	}
+	static function exportCsv($data) {
+		$tmp = charconv_UTF8ToSJIS::conv($data);
+		sys_io_File::saveContent("pasmo.csv", $tmp);
+		$tmp1 = php_Web::getURI();
+		db_DBManager::$_results->result = _hx_anonymous(array("directory" => $tmp1, "fileName" => "pasmo.csv"));
 		db_DBManager::setSuccess();
 	}
 	static function setSuccess() {

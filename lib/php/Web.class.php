@@ -11,6 +11,11 @@ class php_Web {
 		}
 		return php_Lib::hashOfAssociativeArray($a);
 	}
+	static function getURI() {
+		$s = $_SERVER['REQUEST_URI'];
+		$tmp = _hx_explode("?", $s);
+		return $tmp[0];
+	}
 	static $isModNeko;
 	function __toString() { return 'php.Web'; }
 }

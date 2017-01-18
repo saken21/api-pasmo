@@ -1,7 +1,10 @@
 package db;
 
 import haxe.Json;
+import sys.FileSystem;
+import sys.io.File;
 import php.Web;
+import charconv.UTF8ToSJIS;
 import db.table.*;
 
 typedef Params = Map<String,String>;
@@ -9,6 +12,7 @@ typedef Params = Map<String,String>;
 class DBManager {
 
 	private static var _results:Dynamic;
+	private static inline var CSV_NAME:String = 'pasmo.csv';
 
 	/* =======================================================================
 	Public - Get Results
@@ -29,6 +33,7 @@ class DBManager {
 			case 'get'    : id == null ? getList(params['card_id'],params['term']) : getHistory(id);
 			case 'set'    : setHistory(params);
 			case 'delete' : deleteHistory(id);
+			case 'csv'    : exportCsv(params['data']);
 			
 		}
 
@@ -121,6 +126,24 @@ class DBManager {
 		}
 
 		Histories.delete(id);
+		setSuccess();
+
+	}
+
+	/* =======================================================================
+	Export Csv
+	========================================================================== */
+	private static function exportCsv(data:String):Void {
+
+		File.saveContent(CSV_NAME,UTF8ToSJIS.conv(data));
+
+		_results.result = {
+
+			directory : Web.getURI(),
+			fileName  : CSV_NAME
+
+		};
+
 		setSuccess();
 
 	}

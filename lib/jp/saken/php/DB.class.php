@@ -14,6 +14,22 @@ class jp_saken_php_DB {
 	static function getConnection($dbname) {
 		return php_db_PDO::open("mysql:host=" . _hx_string_or_null(jp_saken_php_DB::$_host) . ";dbname=" . _hx_string_or_null($dbname) . ";charset=utf8", jp_saken_php_DB::$_user, jp_saken_php_DB::$_password, null);
 	}
+	static function getData($list) {
+		$results = (new _hx_array(array()));
+		{
+			$tmp = $list->iterator();
+			while(true) {
+				$tmp1 = !$tmp->hasNext();
+				if($tmp1) {
+					break;
+				}
+				$info = $tmp->next();
+				$results->push($info);
+				unset($tmp1,$info);
+			}
+		}
+		return $results;
+	}
 	static function getJSON($list) {
 		$results = (new _hx_array(array()));
 		{
@@ -31,23 +47,8 @@ class jp_saken_php_DB {
 		}
 		return $results->toString();
 	}
-	static function getIsNGSQL($params) {
-		{
-			$tmp = $params->iterator();
-			while(true) {
-				$tmp1 = !$tmp->hasNext();
-				if($tmp1) {
-					break;
-				}
-				$value = $tmp->next();
-				$tmp2 = _hx_deref(new EReg("\"|'", ""))->match($value);
-				if($tmp2) {
-					return true;
-				}
-				unset($value,$tmp2,$tmp1);
-			}
-		}
-		return false;
+	static function isNG($value) {
+		return _hx_deref(new EReg("\"|'| |/", ""))->match($value);
 	}
 	static function getReplacedQuotation($params) {
 		{
